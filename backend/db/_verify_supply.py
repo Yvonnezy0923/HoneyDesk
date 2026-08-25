@@ -1,0 +1,15 @@
+import pymysql
+c = pymysql.connect(host="localhost", user="root", password="Zyazj19960923", charset="utf8mb4")
+cur = c.cursor()
+for t, col in [("sales_orders", "order_date"), ("competitors", "snapshot_date"), ("ad_performance", "stat_date")]:
+    cur.execute("SELECT MAX(%s), COUNT(*) FROM honey_desk.`%s`" % (col, t))
+    print(t, "max=", cur.fetchone()[0])
+cur.execute("SELECT order_date, COUNT(*) FROM honey_desk.sales_orders WHERE order_date>='2026-08-21' GROUP BY order_date ORDER BY order_date")
+print("orders 21~23 每日:", cur.fetchall())
+cur.execute("SELECT snapshot_date, COUNT(*) FROM honey_desk.competitors WHERE snapshot_date>='2026-08-14' GROUP BY snapshot_date ORDER BY snapshot_date")
+print("competitors 14~23:", cur.fetchall())
+cur.execute("SELECT stat_date, COUNT(*) FROM honey_desk.ad_performance WHERE stat_date>='2026-08-21' GROUP BY stat_date ORDER BY stat_date")
+print("ads 21~23:", cur.fetchall())
+cur.execute("SELECT MAX(last_inbound_at) FROM honey_desk.inventory")
+print("inventory last_inbound_at:", cur.fetchone()[0])
+c.close()

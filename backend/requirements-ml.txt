@@ -1,0 +1,6 @@
+# 可选：本地语义模型（BGE-M3 向量 / BGE-reranker 重排）
+# 未安装时系统自动降级为内置轻量 Embedding，核心闭环仍可用。
+# 如需更佳语义检索质量，安装本文件并设置 EMBEDDING_BACKEND=bge
+sentence-transformers==3.3.1
+FlagEmbedding==1.3.3
+torch>=2.2

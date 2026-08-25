@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>蜜方工作台 · UI 风格预览</title>
+<style>
+  :root, [data-skin="modern"] {
+    --brand: #F5C518;            /* 蜂蜜金 */
+    --brand-deep: #8B5E34;       /* 深棕 */
+    --brand-ink: #2E2118;        /* 深褐文字 */
+    --bg: #F6F1E7;               /* 米白底 */
+    --surface: #FFFFFF;
+    --surface-2: #FBF6EC;
+    --text: #2E2118;
+    --muted: #8B7B66;
+    --line: rgba(46,33,24,.12);
+    --ok: #4F8A5B; --warn: #C9A227; --bad: #C6533D;
+    --radius: 12px;
+    --radius-lg: 18px;
+    --font: "PingFang SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+    --font-title: "PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    --shadow: 0 1px 2px rgba(46,33,24,.05);
+    --navh: 64px;
+  }
+  [data-skin="rich"] {
+    --brand: #B5873B; --brand-deep: #7A5120; --brand-ink: #3A2A14;
+    --bg: #22190E; --surface: #2F2212; --surface-2: #3A2C18;
+    --text: #F3E7C9; --muted: #C9B98F;
+    --line: rgba(243,231,201,.16);
+    --ok: #9BBE7E; --warn: #D9B13C; --bad: #D9825B;
+    --radius: 14px; --radius-lg: 20px;
+    --font: "Songti SC","STSong",serif;
+    --font-title: "Songti SC","STSong","Times New Roman",serif;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+  [data-skin="notebook"] {
+    --brand: #C97B4E; --brand-deep: #8A5A3B; --brand-ink: #4A3323;
+    --bg: #FBF3E4; --surface: #FFFBF2; --surface-2: #FFF6E5;
+    --text: #4A3323; --muted: #A08B6F;
+    --line: rgba(74,51,35,.16);
+    --ok: #6B9E6F; --warn: #D9A84A; --bad: #CE7460;
+    --radius: 14px; --radius-lg: 18px;
+    --font: "Kaiti SC","楷体","YouYuan","幼圆",cursive;
+    --font-title: "YouYuan","幼圆","Kaiti SC","楷体",cursive;
+    --shadow: 0 2px 0 rgba(74,51,35,.08);
+    --skew: rotate(-1.2deg);
+  }
+  [data-skin="fresh"] {
+    --brand: #F2C14E; --brand-deep: #E5A93D; --brand-ink: #3A3127;
+    --bg: #FBFCF8; --surface: #FFFFFF; --surface-2: #F6FBF8;
+    --text: #3A3127; --muted: #8C857A;
+    --line: rgba(58,49,39,.12);
+    --ok: #34B7A3; --warn: #E8B53C; --bad: #E1775C;
+    --radius: 14px; --radius-lg: 22px;
+    --font: "Nunito","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    --font-title: "Nunito","PingFang SC",system-ui,sans-serif;
+    --shadow: 0 4px 18px rgba(58,49,39,.06);
+  }
+
+  * { box-sizing: border-box; }
+  html,body { margin:0; padding:0; background:#E8E4DC; color:var(--text); }
+  body { font-family: var(--font); }
+
+  /* ── 顶部分幅 + 切换栏 ── */
+  .bar { position:sticky; top:0; z-index:50; background:#1d1a16; color:#eee; padding:12px 20px; display:flex; align-items:center; gap:20px; flex-wrap:wrap; box-shadow:0 2px 8px rgba(0,0,0,.3); }
+  .bar .bt { font-size:14px; opacity:.6; letter-spacing:1px; }
+  .tabs { display:flex; gap:8px; flex-wrap:wrap; }
+  .tab { border:1px solid rgba(255,255,255,.25); background:transparent; color:#eee; border-radius:999px; padding:6px 16px; cursor:pointer; font:inherit; font-size:13px; }
+  .tab.on { background:#fff; color:#111; border-color:#fff; }
+  .bar .desc { margin-left:auto; font-size:12px; opacity:.75; }
+
+  /* ── 应用外壳 ── */
+  .shell { max-width:1040px; margin:22px auto 60px; background:var(--bg); border-radius:22px; overflow:hidden; box-shadow:0 16px 50px rgba(0,0,0,.18); border:1px solid var(--line); }
+  .app { min-height:640px; display:flex; flex-direction:column; }
+
+  /* 顶栏 */
+  .head { display:flex; align-items:center; gap:14px; padding:16px 24px; border-bottom:1px solid var(--line); background:var(--surface); transform:var(--skew, none); }
+  .brand { display:flex; align-items:center; gap:12px; }
+  .bname { font-family:var(--font-title); font-weight:700; font-size:18px; }
+  .bname small { display:block; font-size:10px; color:var(--muted); font-weight:400; letter-spacing:2px; }
+  .head .spacer { flex:1; }
+  .chip { background:var(--surface-2); border:1px solid var(--line); color:var(--text); font-size:12px; border-radius:999px; padding:5px 12px; }
+  .avatar { width:34px; height:34px; border-radius:50%; background:var(--brand); color:var(--bg); display:grid; place-items:center; font-size:14px; font-weight:700; }
+
+  /* 主体 */
+  .body { padding:22px 24px 8px; display:flex; flex-direction:column; gap:22px; transform:var(--skew, none); }
+
+  /* KPI */
+  .kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .kpi { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); padding:14px 16px; box-shadow:var(--shadow); transform:var(--skew, none); }
+  .kpi .k { font-size:12px; color:var(--muted); display:flex; justify-content:space-between; }
+  .kpi .v { font-size:26px; font-weight:800; font-family:var(--font-title); margin-top:6px; }
+  .kpi .d { font-size:11px; margin-top:4px; color:var(--ok); }
+  .kpi.up .d { color:var(--bad); }
+
+  /* 中间三栏 */
+  .cols { display:grid; grid-template-columns:1.15fr 1fr; gap:16px; align-items:start; }
+  .col2 { display:grid; gap:16px; }
+  .panel { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-lg); padding:16px; box-shadow:var(--shadow); transform:var(--skew, none); }
+  .panel h3 { margin:0 0 12px; font-family:var(--font-title); font-size:15px; display:flex; align-items:center; gap:8px; }
+  .panel h3 .more { margin-left:auto; font-size:11px; color:var(--muted); font-weight:400; cursor:pointer; }
+
+  /* 任务项 */
+  .task { display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px dashed var(--line); font-size:13px; }
+  .task:last-child { border-bottom:none; }
+  .ck { width:18px; height:18px; border:1.5px solid var(--muted); border-radius:50%; flex:none; }
+  .task.done .ck { background:var(--ok); border-color:var(--ok); }
+  .task.done span { text-decoration:line-through; color:var(--muted); }
+  .task .tag { margin-left:auto; font-size:10px; padding:2px 8px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); }
+  .task .tag.hot { background:var(--brand); color:var(--bg); border-color:var(--brand); }
+
+  /* 灵感贴纸 */
+  .stickies { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .sticker { background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius); padding:12px; font-size:12px; color:var(--text); box-shadow:var(--shadow); }
+  .sticker em { display:block; font-style:normal; font-size:14px; font-weight:700; margin-bottom:4px; }
+  .sticker small { color:var(--muted); }
+
+  /* 热力图 */
+  .hm { display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:4px; }
+  .hm-c { display:flex; flex-direction:column; gap:4px; }
+  .hm-c b { font-size:10px; color:var(--muted); font-weight:400; text-align:center; }
+  .hm-g { display:grid; grid-template-rows:repeat(5,14px); gap:4px; }
+  .cell { border-radius:3px; border:1px solid var(--line); }
+
+  /* 底部导航 */
+  .nav { margin-top:auto; background:var(--surface); border-top:1px solid var(--line); display:flex; box-shadow:0 -4px 20px rgba(0,0,0,.04); }
+  .nav-item { flex:1; padding:10px 0 12px; display:flex; flex-direction:column; align-items:center; gap:3px; font-size:11px; color:var(--muted); cursor:pointer; }
+  .nav-item .i { font-size:18px; }
+  .nav-item.on { color:var(--brand); }
+  .nav-item.on .dot { width:16px; height:3px; border-radius:2px; background:var(--brand); }
+
+  @media (max-width:760px){ .kpis{grid-template-columns:repeat(2,1fr)} .cols{grid-template-columns:1fr} }
+</style>
+</head>
+<body data-skin="modern">
+
+<div class="bar">
+  <div class="bt">蜜方工作台 · UI 风格预览</div>
+  <div class="tabs">
+    <button class="tab on" data-skin="modern">① 蜂巢·现代</button>
+    <button class="tab" data-skin="rich">② 臻选·醇厚</button>
+    <button class="tab" data-skin="notebook">③ 蜜语·手账</button>
+    <button class="tab" data-skin="fresh">④ 微光·清新</button>
+  </div>
+  <div class="desc">点击切换皮肤的完整首页效果</div>
+</div>
+
+<div class="shell"><div class="app">
+
+  <div class="head">
+    <div class="brand">
+      <svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true">
+        <g fill="var(--surface-2)" stroke="var(--brand)" stroke-width="1.4">
+          <polygon points="0,-7 6.06,-3.5 6.06,3.5 0,7 -6.06,3.5 -6.06,-3.5" transform="translate(24,12) scale(1.28)"/>
+          <polygon points="0,-7 6.06,-3.5 6.06,3.5 0,7 -6.06,3.5 -6.06,-3.5" transform="translate(12.5,25) scale(1.28)"/>
+          <polygon points="0,-7 6.06,-3.5 6.06,3.5 0,7 -6.06,3.5 -6.06,-3.5" transform="translate(35.5,25) scale(1.28)"/>
+          <polygon points="0,-7 6.06,-3.5 6.06,3.5 0,7 -6.06,3.5 -6.06,-3.5" transform="translate(24,38) scale(1.28)"/>
+        </g>
+        <polygon points="0,-7 6.06,-3.5 6.06,3.5 0,7 -6.06,3.5 -6.06,-3.5" transform="translate(24,25) scale(1.28)" fill="var(--brand)"/>
+      </svg>
+      <div class="bname">蜜方工作台<small>HONEY MIFANG</small></div>
+    </div>
+    <div class="spacer"></div>
+    <span class="chip">跨境电商 · 多店铺</span>
+    <div class="avatar">蜜</div>
+  </div>
+
+  <div class="body">
+    <div class="kpis">
+      <div class="kpi"><div class="k">今日订单</div><div class="v">128</div><div class="d">▲ 较昨日 +12%</div></div>
+      <div class="kpi"><div class="k">今日销售额</div><div class="v">¥12,836</div><div class="d">▲ +8.6%</div></div>
+      <div class="kpi"><div class="k">广告 ROAS</div><div class="v">3.4</div><div class="d">▲ 高于目标</div></div>
+      <div class="kpi up"><div class="k">库存预警</div><div class="v">3 个</div><div class="d">▶ 需补货</div></div>
+    </div>
+
+    <div class="cols">
+      <div class="panel">
+        <h3>今日任务 <span class="more">＋ 新建任务</span></h3>
+        <div class="task done"><span class="ck"></span><span>核对 US 站补货单</span><span class="tag">供应链</span></div>
+        <div class="task"><span class="ck"></span><span>优化 DE 站广告词包</span><span class="tag hot">广告</span></div>
+        <div class="task"><span class="ck"></span><span>上架 TikTok 新爆品</span><span class="tag">运营</span></div>
+        <div class="task"><span class="ck"></span><span>复盘上周增长点</span><span class="tag">分析</span></div>
+      </div>
+
+      <div class="col2">
+        <div class="panel">
+          <h3>灵感池 <span class="more">＋ 收藏</span></h3>
+          <div class="stickies">
+            <div class="sticker"><em>🈵 断货高潜 SKU</em><small>3 款精华可做预售</small></div>
+            <div class="sticker"><em>📈 广告增长 220%</em><small>DE 站防晒词包</small></div>
+            <div class="sticker"><em>🏷 捆绑组合 idea</em><small>洁面+化妆水礼盒</small></div>
+            <div class="sticker"><em>⚠ 竞品降价</em><small>LumineGlow -15%</small></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>近 7 日热力 <span class="more">明细</span></h3>
+          <div class="hm" id="heat"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-item on"><span class="i">✓</span>任务<div class="dot"></div></div>
+    <div class="nav-item"><span class="i">✧</span>灵感池</div>
+    <div class="nav-item"><span class="i">▦</span>热力图</div>
+    <div class="nav-item"><span class="i">⚙</span>设置</div>
+  </div>
+
+</div></div>
+
+<script>
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.body.setAttribute('data-skin', t.getAttribute('data-skin'));
+      tabs.forEach(function (x) { x.classList.toggle('on', x === t); });
+      var d = t.getAttribute('data-skin');
+      var desc = {modern:'扁平现代 · 专业克制 · 主色 #F5C518',
+                  rich:'深棕醇厚 · 古金衬线 · 高级质感',
+                  notebook:'奶油手账 · 幼圆贴纸 · 温暖治愈',
+                  fresh:'清新通亮 · 圆润轻盈 · 年轻活力'}[d];
+      document.querySelector('.bar .desc').textContent = desc;
+    });
+  });
+
+  // 生成热力图（暖色透明度随品牌色）
+  var hm = document.getElementById('heat');
+  var days = ['一','二','三','四','五','六','日'];
+  days.forEach(function (d) {
+    var col = document.createElement('div'); col.className = 'hm-c';
+    col.innerHTML = '<b>'+d+'</b><div class="hm-g">' ;
+    var g = col.querySelector('.hm-g');
+    for (var i=0;i<5;i++){
+      var c=document.createElement('div');
+      c.className='cell';
+      c.style.background='color-mix(in srgb, var(--brand) '+ (10+i*16+ (d==='六'?8:0)) +'%, var(--surface-2))';
+      g.appendChild(c);
+    }
+    hm.appendChild(col);
+  });
+</script>
+</body>
+</html>

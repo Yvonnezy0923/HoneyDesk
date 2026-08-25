@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# 运行时日志（按天文件 + 归档压缩包）
+backend/log/
+backend/llm_log/
+frontend/log/
+
+# Node / 前端
+node_modules/
+frontend/dist/
+.npm-cache/
+
+# 环境
+.env
+
+# 编辑器/系统
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 本地向量模型（体积大，按需下载）
+backend/models/
+models/

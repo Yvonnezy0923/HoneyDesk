@@ -1,0 +1,64 @@
+# ═══════════════════════════════════════════════════════════════════
+# HoneyDesk 蜜方 · 跨境电商 Multi-Agent 个人工作台 · P0
+# 本地 MySQL + Docker（仅 Qdrant / Backend / Frontend）
+#   · 业务/系统数据存放在【本机已安装的 MySQL 8.0】，不用 MySQL 容器
+#   · Qdrant（向量库）、后端、前端用 Docker 编排
+# 首次使用本机 MySQL：在 mysql 客户端执行  backend/db/seed_data.sql 即可一键建库+灌测试数据。
+# ═══════════════════════════════════════════════════════════════════
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.12.4
+    container_name: honeydesk_qdrant
+    restart: unless-stopped
+    volumes:
+      - qdrant_data:/qdrant/storage
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+
+  backend:
+    build: ./backend
+    container_name: honeydesk_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      # 连接【宿主机】的 MySQL：Docker Desktop 用 host.docker.internal
+      MYSQL_HOST: ${MYSQL_HOST:-host.docker.internal}
+      MYSQL_PORT: "3306"
+      MYSQL_USER: ${MYSQL_USER:-root}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-honey_system}
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: "6333"
+      APP_PORT: "8000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - qdrant
+    volumes:
+      - ./backend:/app
+      - model_cache:/models
+    ports:
+      - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build: ./frontend
+    container_name: honeydesk_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE: http://localhost:8000
+    depends_on:
+      - backend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  qdrant_data:
+  model_cache:
